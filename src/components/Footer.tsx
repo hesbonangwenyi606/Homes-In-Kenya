@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Home,
   MapPin,
@@ -10,52 +10,86 @@ import {
   Linkedin,
   Send,
   ArrowRight,
-} from 'lucide-react';
+} from "lucide-react";
 
 const Footer: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<
+    "idle" | "submitting" | "success" | "error"
+  >("idle");
+  const [shake, setShake] = useState(false);
+
+  const propertyTypes = [
+    "Houses",
+    "Apartments",
+    "Land",
+    "Bungalows",
+    "Commercial",
+    "Villas",
+  ];
+  const locations = ["Nairobi", "Mombasa", "Kisumu", "Nakuru", "Eldoret", "Thika"];
+  const quickLinks = ["About Us", "Our Agents", "Blog", "Careers", "FAQs", "Contact"];
+  const resources = [
+    "Mortgage Calculator",
+    "Property Guide",
+    "Market Insights",
+    "Legal Guide",
+    "Investment Tips",
+    "Moving Checklist",
+  ];
+
+  const validateEmail = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!validateEmail(email)) {
+      setShake(true);
+      setStatus("error");
+      setTimeout(() => setShake(false), 500);
+      return;
+    }
 
-    setStatus('submitting');
-
+    setStatus("submitting");
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
-      setStatus('success');
-      setEmail('');
-      setTimeout(() => setStatus('idle'), 3000);
+      setStatus("success");
+      setEmail("");
+      setTimeout(() => setStatus("idle"), 3000);
     } catch {
-      setStatus('error');
-      setTimeout(() => setStatus('idle'), 3000);
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 3000);
     }
   };
-
-  const propertyTypes = ['Houses', 'Apartments', 'Land', 'Bungalows', 'Commercial', 'Villas'];
-  const locations = ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Thika'];
-  const quickLinks = ['About Us', 'Our Agents', 'Blog', 'Careers', 'FAQs', 'Contact'];
-  const resources = ['Mortgage Calculator', 'Property Guide', 'Market Insights', 'Legal Guide', 'Investment Tips', 'Moving Checklist'];
 
   return (
     <footer
       className="text-white relative bg-cover bg-center"
       style={{
-        backgroundImage: "url('https://i.pinimg.com/736x/49/40/2e/49402e48421b3b59352d170668eb3572.jpg')",
+        backgroundImage:
+          "url('https://i.pinimg.com/1200x/3d/a8/13/3da813f35232d5006c2679eb8d3f0cf9.jpg')",
       }}
     >
       {/* Dark Overlay */}
-      <div className="bg-black bg-opacity-70">
+      <div className="bg-black bg-opacity-60">
         {/* Newsletter Section */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="bg-black bg-opacity-50 rounded-xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-              <h3 className="text-2xl font-bold mb-2">Get New Listings in Your Inbox</h3>
-              <p className="text-emerald-100">Subscribe to receive the latest properties and market insights.</p>
+              <h3 className="text-2xl font-bold mb-2">
+                Get New Listings in Your Inbox
+              </h3>
+              <p className="text-emerald-100">
+                Subscribe to receive the latest properties and market insights.
+              </p>
             </div>
-            <form onSubmit={handleSubscribe} className="flex w-full sm:w-auto gap-3">
+
+            {/* Newsletter Form */}
+            <form
+              onSubmit={handleSubscribe}
+              className={`flex w-full sm:w-auto gap-3 ${shake ? "animate-shake" : ""}`}
+            >
               <div className="relative flex-1 sm:w-80">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -69,22 +103,36 @@ const Footer: React.FC = () => {
               </div>
               <button
                 type="submit"
-                disabled={status === 'submitting'}
+                disabled={status === "submitting"}
                 className={`px-6 py-3.5 rounded-xl font-semibold flex items-center gap-2 transition-colors ${
-                  status === 'success'
-                    ? 'bg-green-500 hover:bg-green-600'
-                    : 'bg-amber-500 hover:bg-amber-600'
+                  status === "success"
+                    ? "bg-green-500 hover:bg-green-600"
+                    : status === "error"
+                    ? "bg-red-500 hover:bg-red-600"
+                    : "bg-amber-500 hover:bg-amber-600"
                 } text-white`}
               >
-                {status === 'submitting'
-                  ? 'Submitting...'
-                  : status === 'success'
-                  ? 'Subscribed!'
-                  : status === 'error'
-                  ? 'Try Again'
-                  : 'Subscribe'}
+                {status === "submitting"
+                  ? "Submitting..."
+                  : status === "success"
+                  ? "Subscribed!"
+                  : status === "error"
+                  ? "Invalid Email"
+                  : "Subscribe"}
                 <Send className="w-4 h-4" />
               </button>
+
+              {/* Shake animation */}
+              <style>{`
+                @keyframes shake {
+                  0%, 100% { transform: translateX(0); }
+                  20%, 60% { transform: translateX(-5px); }
+                  40%, 80% { transform: translateX(5px); }
+                }
+                .animate-shake {
+                  animation: shake 0.5s;
+                }
+              `}</style>
             </form>
           </div>
         </div>
@@ -105,7 +153,8 @@ const Footer: React.FC = () => {
                 </div>
               </div>
               <p className="text-gray-400 mb-6 max-w-sm">
-                Kenya's premier real estate platform. Find your dream home from thousands of verified listings across the country.
+                Kenya's premier real estate platform. Find your dream home from
+                thousands of verified listings across the country.
               </p>
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-gray-400">
@@ -114,7 +163,7 @@ const Footer: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-3 text-gray-400">
                   <Phone className="w-5 h-5 text-emerald-500" />
-                  <span>+254 7XX XXX XXX</span>
+                  <span>+254 700 123 456</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-400">
                   <Mail className="w-5 h-5 text-emerald-500" />
@@ -233,13 +282,22 @@ const Footer: React.FC = () => {
                 © 2026 KenyaHomes. All rights reserved.
               </p>
               <div className="flex gap-6 text-sm">
-                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-emerald-400 transition-colors"
+                >
                   Privacy Policy
                 </a>
-                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-emerald-400 transition-colors"
+                >
                   Terms of Service
                 </a>
-                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-emerald-400 transition-colors"
+                >
                   Cookie Policy
                 </a>
               </div>
