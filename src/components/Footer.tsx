@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
   return (
     <footer
       className="text-white relative bg-cover bg-center"
-      style={{ backgroundImage: "url('https://i.pinimg.com/1200x/09/51/32/09513208e74ebe89f8cd6d409d72ea6b.jpg')" }} // Replace with your image
+      style={{ backgroundImage: "url('https://i.pinimg.com/736x/49/40/2e/49402e48421b3b59352d170668eb3572.jpg')" }} // Replace with your image
     >
       {/* Dark Overlay */}
       <div className="bg-black bg-opacity-60">
