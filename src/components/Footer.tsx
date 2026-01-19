@@ -1,16 +1,36 @@
 import React, { useState } from 'react';
-import { Home, MapPin, Phone, Mail, Facebook, Twitter, Instagram, Linkedin, Send, ArrowRight } from 'lucide-react';
+import {
+  Home,
+  MapPin,
+  Phone,
+  Mail,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  Send,
+  ArrowRight,
+} from 'lucide-react';
 
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      setSubscribed(true);
+    if (!email) return;
+
+    setStatus('submitting');
+
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      setStatus('success');
       setEmail('');
-      setTimeout(() => setSubscribed(false), 3000);
+      setTimeout(() => setStatus('idle'), 3000);
+    } catch {
+      setStatus('error');
+      setTimeout(() => setStatus('idle'), 3000);
     }
   };
 
@@ -22,39 +42,50 @@ const Footer: React.FC = () => {
   return (
     <footer
       className="text-white relative bg-cover bg-center"
-      style={{ backgroundImage: "url('https://i.pinimg.com/736x/49/40/2e/49402e48421b3b59352d170668eb3572.jpg')" }} // Replace with your image
+      style={{
+        backgroundImage: "url('https://i.pinimg.com/736x/49/40/2e/49402e48421b3b59352d170668eb3572.jpg')",
+      }}
     >
       {/* Dark Overlay */}
-      <div className="bg-black bg-opacity-60">
+      <div className="bg-black bg-opacity-70">
         {/* Newsletter Section */}
-        <div className="bg-gradient-to-r from-emerald-600 to-emerald-700">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-              <div>
-                <h3 className="text-2xl font-bold mb-2">Get New Listings in Your Inbox</h3>
-                <p className="text-emerald-100">Subscribe to receive the latest properties and market insights.</p>
-              </div>
-              <form onSubmit={handleSubscribe} className="flex w-full md:w-auto gap-3">
-                <div className="relative flex-1 md:w-80">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
-                    required
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="px-6 py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl transition-colors flex items-center gap-2"
-                >
-                  {subscribed ? 'Subscribed!' : 'Subscribe'}
-                  <Send className="w-4 h-4" />
-                </button>
-              </form>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="bg-black bg-opacity-50 rounded-xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 className="text-2xl font-bold mb-2">Get New Listings in Your Inbox</h3>
+              <p className="text-emerald-100">Subscribe to receive the latest properties and market insights.</p>
             </div>
+            <form onSubmit={handleSubscribe} className="flex w-full sm:w-auto gap-3">
+              <div className="relative flex-1 sm:w-80">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={status === 'submitting'}
+                className={`px-6 py-3.5 rounded-xl font-semibold flex items-center gap-2 transition-colors ${
+                  status === 'success'
+                    ? 'bg-green-500 hover:bg-green-600'
+                    : 'bg-amber-500 hover:bg-amber-600'
+                } text-white`}
+              >
+                {status === 'submitting'
+                  ? 'Submitting...'
+                  : status === 'success'
+                  ? 'Subscribed!'
+                  : status === 'error'
+                  ? 'Try Again'
+                  : 'Subscribe'}
+                <Send className="w-4 h-4" />
+              </button>
+            </form>
           </div>
         </div>
 
@@ -68,7 +99,9 @@ const Footer: React.FC = () => {
                   <Home className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold">Kenya<span className="text-emerald-400">Homes</span></h2>
+                  <h2 className="text-xl font-bold">
+                    Kenya<span className="text-emerald-400">Homes</span>
+                  </h2>
                 </div>
               </div>
               <p className="text-gray-400 mb-6 max-w-sm">
@@ -81,25 +114,38 @@ const Footer: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-3 text-gray-400">
                   <Phone className="w-5 h-5 text-emerald-500" />
-                  <span>+254 7** *** ***</span>
+                  <span>+254 7XX XXX XXX</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-400">
                   <Mail className="w-5 h-5 text-emerald-500" />
                   <span>info@kenyahomes.co.ke</span>
                 </div>
               </div>
+
               {/* Social Icons Centered */}
               <div className="flex justify-center gap-4 mt-6">
-                <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-emerald-600 rounded-lg flex items-center justify-center transition-colors">
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-gray-800 hover:bg-emerald-600 rounded-lg flex items-center justify-center transition-colors"
+                >
                   <Facebook className="w-5 h-5" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-emerald-600 rounded-lg flex items-center justify-center transition-colors">
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-gray-800 hover:bg-emerald-600 rounded-lg flex items-center justify-center transition-colors"
+                >
                   <Twitter className="w-5 h-5" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-emerald-600 rounded-lg flex items-center justify-center transition-colors">
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-gray-800 hover:bg-emerald-600 rounded-lg flex items-center justify-center transition-colors"
+                >
                   <Instagram className="w-5 h-5" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-emerald-600 rounded-lg flex items-center justify-center transition-colors">
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-gray-800 hover:bg-emerald-600 rounded-lg flex items-center justify-center transition-colors"
+                >
                   <Linkedin className="w-5 h-5" />
                 </a>
               </div>
@@ -111,7 +157,10 @@ const Footer: React.FC = () => {
               <ul className="space-y-3">
                 {propertyTypes.map((type) => (
                   <li key={type}>
-                    <a href="#properties" className="text-gray-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group">
+                    <a
+                      href="#properties"
+                      className="text-gray-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group"
+                    >
                       <ArrowRight className="w-4 h-4 opacity-0 -ml-5 group-hover:opacity-100 group-hover:ml-0 transition-all" />
                       {type}
                     </a>
@@ -126,7 +175,10 @@ const Footer: React.FC = () => {
               <ul className="space-y-3">
                 {locations.map((location) => (
                   <li key={location}>
-                    <a href="#properties" className="text-gray-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group">
+                    <a
+                      href="#properties"
+                      className="text-gray-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group"
+                    >
                       <ArrowRight className="w-4 h-4 opacity-0 -ml-5 group-hover:opacity-100 group-hover:ml-0 transition-all" />
                       {location}
                     </a>
@@ -141,7 +193,10 @@ const Footer: React.FC = () => {
               <ul className="space-y-3">
                 {quickLinks.map((link) => (
                   <li key={link}>
-                    <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group">
+                    <a
+                      href="#"
+                      className="text-gray-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group"
+                    >
                       <ArrowRight className="w-4 h-4 opacity-0 -ml-5 group-hover:opacity-100 group-hover:ml-0 transition-all" />
                       {link}
                     </a>
@@ -156,7 +211,10 @@ const Footer: React.FC = () => {
               <ul className="space-y-3">
                 {resources.map((resource) => (
                   <li key={resource}>
-                    <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group">
+                    <a
+                      href="#"
+                      className="text-gray-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group"
+                    >
                       <ArrowRight className="w-4 h-4 opacity-0 -ml-5 group-hover:opacity-100 group-hover:ml-0 transition-all" />
                       {resource}
                     </a>
@@ -175,9 +233,15 @@ const Footer: React.FC = () => {
                 © 2026 KenyaHomes. All rights reserved.
               </p>
               <div className="flex gap-6 text-sm">
-                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">Privacy Policy</a>
-                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">Terms of Service</a>
-                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">Cookie Policy</a>
+                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                  Privacy Policy
+                </a>
+                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                  Terms of Service
+                </a>
+                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                  Cookie Policy
+                </a>
               </div>
             </div>
           </div>
