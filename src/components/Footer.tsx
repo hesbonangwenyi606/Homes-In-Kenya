@@ -68,7 +68,7 @@ const Footer: React.FC = () => {
       className="text-white relative bg-cover bg-center"
       style={{
         backgroundImage:
-          "url('https://i.pinimg.com/1200x/3d/a8/13/3da813f35232d5006c2679eb8d3f0cf9.jpg')",
+          "url('https://i.pinimg.com/1200x/48/05/05/480505da4577c3030a7c90fed197332c.jpg')",
       }}
     >
       {/* Dark Overlay */}
